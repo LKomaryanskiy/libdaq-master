@@ -94,11 +94,9 @@ struct _daq_module
      * @param [in] hdr         DAQ packet header of the control channel packet.
      * @param [in] dp_key      Key structure of the data channel flow
      * @param [in] packet_data Packet of the companion control channel packet.
-     * @param [in] params      Parameters to control the PST/EFT entry.
      * @return                 Error code of the API. 0 - success.
      */
-    int (*dp_add_dc) (void *handle, const DAQ_PktHdr_t *hdr, DAQ_DP_key_t *dp_key,
-                      const uint8_t *packet_data, DAQ_Data_Channel_Params_t *params);
+    int (*dp_add_dc) (void *handle, const DAQ_PktHdr_t * hdr, DAQ_DP_key_t * dp_key, const uint8_t * packet_data);
     /* Query a flow */
     int (*query_flow) (void *handle, const DAQ_PktHdr_t *hdr, DAQ_QueryFlow_t *query);
 };
