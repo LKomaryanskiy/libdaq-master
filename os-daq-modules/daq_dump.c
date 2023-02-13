@@ -447,33 +447,6 @@ static int dump_daq_modify_flow(void *handle, const DAQ_PktHdr_t *hdr, const DAQ
     return DAQ_SUCCESS;
 }
 
-static int dump_daq_dp_add_dc(void *handle, const DAQ_PktHdr_t *hdr, DAQ_DP_key_t *dp_key,
-                                const uint8_t *packet_data, DAQ_Data_Channel_Params_t *params)
-{
-    DumpImpl* impl = (DumpImpl*)handle;
-
-    if (impl->text_out)
-    {
-        char src_addr_str[INET6_ADDRSTRLEN], dst_addr_str[INET6_ADDRSTRLEN];
-
-        fprintf(impl->text_out, "DP: %lu.%lu(%u):\n", (unsigned long) hdr->ts.tv_sec,
-                (unsigned long) hdr->ts.tv_usec, hdr->caplen);
-        if (dp_key->src_af == AF_INET)
-            inet_ntop(AF_INET, &dp_key->sa.src_ip4, src_addr_str, sizeof(src_addr_str));
-        else
-            inet_ntop(AF_INET6, &dp_key->sa.src_ip6, src_addr_str, sizeof(src_addr_str));
-        if (dp_key->dst_af == AF_INET)
-            inet_ntop(AF_INET, &dp_key->da.dst_ip4, dst_addr_str, sizeof(dst_addr_str));
-        else
-            inet_ntop(AF_INET6, &dp_key->da.dst_ip6, dst_addr_str, sizeof(dst_addr_str));
-        fprintf(impl->text_out, "    %s:%hu -> %s:%hu (%hhu)\n", src_addr_str, dp_key->src_port,
-                dst_addr_str, dp_key->dst_port, dp_key->protocol);
-        fprintf(impl->text_out, "    %hu %hu %hu %hu 0x%X %u\n", dp_key->address_space_id, dp_key->tunnel_type,
-                dp_key->vlan_id, dp_key->vlan_cnots, params ? params->flags : 0, params ? params->timeout_ms : 0);
-    }
-    return DAQ_SUCCESS;
-}
-
 //-------------------------------------------------------------------------
 
 #ifdef BUILDING_SO
@@ -507,7 +480,7 @@ DAQ_Module_t dump_daq_module_data =
     .hup_prep = NULL,
     .hup_apply = NULL,
     .hup_post = NULL,
-    .dp_add_dc = dump_daq_dp_add_dc,
+    .dp_add_dc = NULL,
     .query_flow = NULL,
 };
 
